@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" addBOMForNewFiles="with NO BOM">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auto-complete-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auto-complete-constant" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auto-complete-dto" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auto-complete-exception" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auto-complete-model" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auto-complete-repo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auto-complete-svc" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auto-complete-util" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/parent" charset="UTF-8" />
+  </component>
+</project>
