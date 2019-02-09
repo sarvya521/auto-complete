@@ -13,12 +13,20 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+/**
+ * Implementation of {@link com.ac.repo.StateDAO}
+ * 
+ * @author sarvesh
+ */
 @Repository
 public class StateDAOImpl implements StateDAO {
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<MstState> getStates(String keyword) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -26,10 +34,8 @@ public class StateDAOImpl implements StateDAO {
 
         Root<MstState> state = cq.from(MstState.class);
 
-        Predicate namePredicate = cb.like(state.get("name"), "%" + keyword + "%");
+        Predicate namePredicate = cb.like(cb.lower(state.get("name")), "%" + keyword.toLowerCase() + "%");
         cq.where(namePredicate);
-
-        cq.orderBy(cb.asc(state.get("name")));
 
         TypedQuery<MstState> query = entityManager.createQuery(cq);
         return query.getResultList();

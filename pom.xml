@@ -23,15 +23,14 @@
   </parent>
 
   <dependencies>
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-log4j2</artifactId>
+	</dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
       <version>4.3</version>
-    </dependency>
-    <dependency>
-      <groupId>com.veracode.annotation</groupId>
-      <artifactId>VeracodeAnnotations</artifactId>
-      <version>1.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.owasp.encoder</groupId>
@@ -39,9 +38,13 @@
       <version>1.2.2</version>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -93,13 +96,13 @@
   <modules>
     <module>parent</module>
     <module>auto-complete-model</module>
+    <module>auto-complete-constant</module>
+    <module>auto-complete-exception</module>
     <module>auto-complete-util</module>
     <module>auto-complete-dto</module>
     <module>auto-complete-repo</module>
     <module>auto-complete-svc</module>
     <module>auto-complete-api</module>
-    <module>auto-complete-constant</module>
-    <module>auto-complete-exception</module>
   </modules>
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->

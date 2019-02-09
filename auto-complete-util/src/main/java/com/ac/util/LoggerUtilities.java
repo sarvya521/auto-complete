@@ -1,11 +1,18 @@
 package com.ac.util;
 
-import org.owasp.encoder.Encode;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.owasp.encoder.Encode;
 
 /**
  * Utility methods for constructing messages for application logs.
- * @author sarvya521
+ * 
+ * @author sarvesh
  */
 public final class LoggerUtilities {
     
@@ -18,7 +25,7 @@ public final class LoggerUtilities {
     /**
      * Empty string replacement.
      */
-    private static final String EMPTY = ""; //NOI18N
+    private static final String EMPTY = ""; 
     
     /**
      * Returns a formatted message string based on the supplied format and parameters. The
@@ -95,12 +102,34 @@ public final class LoggerUtilities {
         }
 
         int i = 0;
-        while (result.contains("{}")) { //NOI18N
-            String replacement = "{" + i++ + "}";  //NOI18N
+        while (result.contains("{}")) { 
+            String replacement = "{" + i++ + "}";  
             if (!result.contains(replacement)) {
-                result = result.replaceFirst("\\{\\}", replacement); //NOI18N
+                result = result.replaceFirst("\\{\\}", replacement); 
             }
         }
         return result;
     }
+    
+    public static void main(String[] args) {
+    	System.out.println(LoggerUtilities.getMessage("auto complete is not available for component {} and {}", "city", "state"));
+    	
+    	String key = "m";
+    	List<String> list = Arrays.stream("Aasaam,Madhyapradesh,Maharashtra,Tamilnadu,Bm,Maa,Mab".split(",")).collect(Collectors.toList());
+    	Collections.sort(list, new Comparator<String>() {
+			@Override
+			public int compare(String s1, String s2) {
+				if(s1.toLowerCase().startsWith(key) && s2.toLowerCase().startsWith(key)) {
+					return s1.compareTo(s2);
+				} else if (s1.toLowerCase().startsWith(key)) {
+					return -1;
+				} else if (s2.toLowerCase().startsWith(key)) {
+					return 1;
+				} else {
+					return s1.compareTo(s2);
+				}
+			}
+		});
+    	System.out.println(list);
+	}
 }

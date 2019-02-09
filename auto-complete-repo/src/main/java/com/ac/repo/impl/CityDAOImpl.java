@@ -13,12 +13,20 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+/**
+ * Implementation of {@link com.ac.repo.StateDAO}
+ * 
+ * @author sarvesh
+ */
 @Repository
 public class CityDAOImpl implements CityDAO {
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<MstCity> getCities(String keyword) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -26,10 +34,8 @@ public class CityDAOImpl implements CityDAO {
 
         Root<MstCity> city = cq.from(MstCity.class);
 
-        Predicate namePredicate = cb.like(city.get("name"), "%" + keyword + "%");
+        Predicate namePredicate = cb.like(cb.lower(city.get("name")), "%" + keyword.toLowerCase() + "%");
         cq.where(namePredicate);
-
-        cq.orderBy(cb.asc(city.get("name")));
 
         TypedQuery<MstCity> query = entityManager.createQuery(cq);
         return query.getResultList();
