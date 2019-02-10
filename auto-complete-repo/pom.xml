@@ -63,4 +63,86 @@
 		</resource>
 	</resources>
   </build>
+  
+<!-- 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>sql-maven-plugin</artifactId>
+
+            <dependencies>
+                <dependency>
+                    <groupId>com.h2database</groupId>
+      				<artifactId>h2</artifactId>
+      				<version>${h2.version}</version>
+                </dependency>
+            </dependencies>
+            <configuration>
+                <source>1.8</source>
+                <target>1.8</target>
+                <encoding>UTF-8</encoding>
+                <driver>org.h2.Driver</driver>
+                <url>jdbc:h2:mem:auto-complete-demo;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</url>
+                <username>sa</username>
+                <password></password>
+                <skip>${maven.test.skip}</skip>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>create-integration-test-data</id>
+                    <phase>process-test-resources</phase>
+                    <inherited>true</inherited>
+                    <goals>
+                        <goal>execute</goal>
+                    </goals>
+                    <configuration>
+                        <url>jdbc:h2:mem:auto-complete-demo;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</url>
+                        <autocommit>true</autocommit>
+                        <orderFile>ascending</orderFile>
+                        <fileset>
+                            <basedir>${basedir}/src/test/resources</basedir>
+                            <includes>
+                            	<include>create.sql</include>
+                                <include>data.sql</include>
+                            </includes>
+                        </fileset>
+                    </configuration>
+                </execution>
+
+                <execution>
+                    <id>drop-db-after-test</id>
+                    <phase>post-integration-test</phase>
+                    <goals>
+                        <goal>execute</goal>
+                    </goals>
+                    <configuration>
+                        <orderFile>ascending</orderFile>
+                        <fileset>
+                            <basedir>${basedir}/src/test/resources</basedir>
+                            <includes>
+                                <include>drop.sql</include>
+                            </includes>
+                        </fileset>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+    <resources>
+		<resource>
+			<directory>src/main/resources</directory>
+		</resource>
+	</resources>
+	<testResources>
+		<testResource>
+			<directory>src/test/resources</directory>
+		</testResource>
+	</testResources>
+  </build>
+-->
 </project>
