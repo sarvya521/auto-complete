@@ -46,7 +46,7 @@ public class CommonApiControllerTest {
 	}
 
 	@Test
-	public void testSearch() throws Exception {
+	public void testSearchWithoutLimit() throws Exception {
 		final String type = "city";
 		final String key = "n";
 
@@ -79,16 +79,50 @@ public class CommonApiControllerTest {
 
 		expectedSortedList.sort(new CityNameComparator(key));
 
-		when(autoCompleteSvcFacade.search(type, key)).thenReturn(expectedSortedList);
+		when(autoCompleteSvcFacade.search(type, key, null)).thenReturn(expectedSortedList);
 
-		mockMvc.perform(get("/api/search/" + type).param("key", key).contentType(APPLICATION_JSON_UTF8))
+		mockMvc.perform(get("/api/search/" + type).param("start", key).contentType(APPLICATION_JSON_UTF8))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(5)))
 				.andExpect(jsonPath("$[0].name", is("New Delhi"))).andExpect(jsonPath("$[1].name", is("Noida")))
 				.andExpect(jsonPath("$[2].name", is("Banglore"))).andExpect(jsonPath("$[3].name", is("Chennai")))
 				.andExpect(jsonPath("$[4].name", is("Pune")));
 		
-		verify(autoCompleteSvcFacade, times(1)).search(type, key);
+		verify(autoCompleteSvcFacade, times(1)).search(type, key, null);
+        verifyNoMoreInteractions(autoCompleteSvcFacade);
+	}
+	
+	@Test
+	public void testSearchWithLimit() throws Exception {
+		final String type = "city";
+		final String key = "n";
+		final Integer maxResult = 3;
+
+		City c2 = new City();
+		c2.setId(6);
+		c2.setName("Noida");
+
+		City c3 = new City();
+		c3.setId(3);
+		c3.setName("New Delhi");
+
+		City c5 = new City();
+		c5.setId(4);
+		c5.setName("Banglore");
+
+		List<City> expectedSortedList = new ArrayList<>();
+		expectedSortedList.add(c3);
+		expectedSortedList.add(c2);
+		expectedSortedList.add(c5);
+
+		when(autoCompleteSvcFacade.search(type, key, maxResult)).thenReturn(expectedSortedList);
+
+		mockMvc.perform(get("/api/search/" + type).param("start", key).param("atmost", maxResult.toString())
+				.contentType(APPLICATION_JSON_UTF8)).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(maxResult)))
+				.andExpect(jsonPath("$[0].name", is("New Delhi"))).andExpect(jsonPath("$[1].name", is("Noida")))
+				.andExpect(jsonPath("$[2].name", is("Banglore")));
+		
+		verify(autoCompleteSvcFacade, times(1)).search(type, key, maxResult);
         verifyNoMoreInteractions(autoCompleteSvcFacade);
 	}
 

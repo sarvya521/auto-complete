@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.ac.constant.AcError;
 import com.ac.constant.AutoCompleteComponent;
-import com.ac.exception.AutoCompleteSvcException;
 import com.ac.exception.AutoCompleteSvcNotFoundException;
 import com.ac.svc.AutoCompleteService;
 import com.ac.util.LoggerUtilities;
@@ -38,12 +37,13 @@ public class AutoCompleteSvcFacade {
 	 * 
 	 * @param type component for which keyword will be searched
 	 * @param key  non-null keyword to search.
+	 * @param maxResult maximum number of suggestions needed 
 	 * @return java.util.List list of model objects representing given type
 	 * @throws AutoCompleteSvcNotFoundException If No {@link com.ac.svc.AutoCompleteService}
 	 *                                  implementation found for given type
 	 */
 	@SuppressWarnings("rawtypes")
-	public List search(String type, String key) throws AutoCompleteSvcNotFoundException {
+	public List search(String type, String key, Integer maxResult) throws AutoCompleteSvcNotFoundException {
     	LOGGER.info(LoggerUtilities.getMessage("fetching auto complete results for {} with keyword {}", type, key));
         String acServiceQualifierName = AutoCompleteComponent.getService(type);
         AutoCompleteService acService = context.getBean(acServiceQualifierName, AutoCompleteService.class);
@@ -51,7 +51,10 @@ public class AutoCompleteSvcFacade {
         	LOGGER.error(LoggerUtilities.getMessage("auto complete is not available for component {}", type));
             throw new AutoCompleteSvcNotFoundException(AcError.INVALID_COMPONENT);
         }
-        return acService.search(key);
+        if(maxResult == null) {
+        	return acService.search(key);
+        }
+        return acService.search(key, maxResult);
     }
 	
     /*@Autowired

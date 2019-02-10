@@ -37,13 +37,15 @@ public class CommonApiController {
 	/**
 	 * @param type auto-complete component
 	 * @param key  non-null keyword to search
+	 * @param maxResult maximum number of suggestions needed 
 	 * @return {@link java.util.List} list of {@code model} objects representing
 	 *         {@code type}
 	 */
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/api/search/{type}")
-	public List search(@PathVariable(value = "type") String type, @RequestParam(value = "key") String key) {
-		LOGGER.info(LoggerUtilities.getMessage("serving auto-complete request for {} with keyword {}", type, key));
-		return autoCompleteSvcFacade.search(type, key);
+	public List search(@PathVariable(value = "type") String type, @RequestParam(value = "start") String key,
+			@RequestParam(value = "atmost", required = false) Integer maxResult) {
+		LOGGER.info(LoggerUtilities.getMessage("serving auto-complete request for {} with keyword {} and limit {}", type, key, maxResult));
+		return autoCompleteSvcFacade.search(type, key, maxResult);
 	}
 }

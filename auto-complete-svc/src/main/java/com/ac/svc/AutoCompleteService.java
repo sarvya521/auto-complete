@@ -51,4 +51,26 @@ public interface AutoCompleteService<T> {
 	 * @return {@link java.util.List} list of {@code <T>}
 	 */
 	List<T> search(String key);
+	
+	/**
+	 * Encapsulate core business logic of searching for a given key in database and
+	 * returns the sorted result. {@code Database Entity} is queried for given key
+	 * to get {@link java.util.List} sorted list of {@code DTO} objects for specified
+	 * {@code Database Entity}. This sorted list of {@code DTO} objects is then copied to
+	 * its related {@code List<T>}.
+	 * 
+	 * <p>
+	 * Result {@code List<T>} can be stored in cache against the requested
+	 * {@code key}.
+	 * 
+	 * <p>
+	 * Caching mechanism can be implemented using
+	 * {@link com.ac.util.SynchronizedInMemoryCache} which follows
+	 * {@code Least Recently Used} algorithm in {@code synchronized} context
+	 * 
+	 * @param key non-null keyword to search.
+	 * @param maxResult maximum number of suggestions needed 
+	 * @return {@link java.util.List} list of {@code <T>}
+	 */
+	List<T> search(String key, Integer maxResult);
 }

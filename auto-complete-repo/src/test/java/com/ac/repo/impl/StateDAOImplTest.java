@@ -26,7 +26,7 @@ public class StateDAOImplTest {
 	private StateDAO stateDAO;
 	
 	@Test
-	public void should_pass_getStates() {
+	public void should_pass_getStates_without_limit() {
 		List<MstState> list = stateDAO.getStates("m");
 		assertEquals(4, list.size());
 
@@ -53,6 +53,31 @@ public class StateDAOImplTest {
 		expectedList.add(s2);
 
 		assertTrue(list.containsAll(expectedList));
+	}
+	
+	@Test
+	public void should_pass_getStates_with_limit() {
+		List<MstState> list = stateDAO.getStates("m", 3);
+		assertEquals(3, list.size());
+
+		MstState s1 = new MstState();
+		s1.setId(1);
+		s1.setName("Maharashtra");
+
+		MstState s3 = new MstState();
+		s3.setId(7);
+		s3.setName("Madhyapradesh");
+
+		MstState s4 = new MstState();
+		s4.setId(8);
+		s4.setName("Aasaam");
+
+		List<MstState> expectedSortedList = new ArrayList<>();
+		expectedSortedList.add(s3);
+		expectedSortedList.add(s1);
+		expectedSortedList.add(s4);
+
+		assertTrue(list.containsAll(expectedSortedList));
 	}
 
 	@Test

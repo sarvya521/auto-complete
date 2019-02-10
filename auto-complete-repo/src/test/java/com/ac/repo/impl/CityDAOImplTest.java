@@ -24,7 +24,7 @@ public class CityDAOImplTest {
 	private CityDAO cityDAO;
 
 	@Test
-	public void should_pass_getStates() {
+	public void should_pass_getCities_without_limit() {
 		List<MstCity> list = cityDAO.getCities("n");
 		assertEquals(5, list.size());
 
@@ -56,6 +56,31 @@ public class CityDAOImplTest {
 		expectedList.add(c5);
 
 		assertTrue(list.containsAll(expectedList));
+	}
+	
+	@Test
+	public void should_pass_getCities_with_limit() {
+		List<MstCity> list = cityDAO.getCities("n", 3);
+		assertEquals(3, list.size());
+
+		MstCity c2 = new MstCity();
+		c2.setId(6);
+		c2.setName("Noida");
+
+		MstCity c3 = new MstCity();
+		c3.setId(3);
+		c3.setName("New Delhi");
+
+		MstCity c5 = new MstCity();
+		c5.setId(4);
+		c5.setName("Banglore");
+
+		List<MstCity> expectedSortedList = new ArrayList<>();
+		expectedSortedList.add(c3);
+		expectedSortedList.add(c2);
+		expectedSortedList.add(c5);
+
+		assertTrue(list.containsAll(expectedSortedList));
 	}
 
 	@Test

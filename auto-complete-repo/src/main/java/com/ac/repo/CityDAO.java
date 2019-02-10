@@ -19,4 +19,12 @@ public interface CityDAO {
 	 */
     List<MstCity> getCities(String keyword);
 
+    /**
+	 * 
+	 * @param keyword keyword to search in {@link com.ac.dto.MstCity#getName()} 
+	 * @param maxResult maximum number of suggestions needed 
+	 * @return {@link java.util.List} of {@link com.ac.dto.MstCity} whose {@code name} contains given {@code keyword}
+	 */
+	List<MstCity> getCities(String keyword, int maxResult);
+
 }

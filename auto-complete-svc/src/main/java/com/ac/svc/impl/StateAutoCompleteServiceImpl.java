@@ -119,6 +119,35 @@ public class StateAutoCompleteServiceImpl implements AutoCompleteService<State> 
 		}
 		return result;
 	}
+	
+	 /**
+     * {@inheritDoc}
+     * 
+     * @return {@link java.util.List} list of {@link com.ac.model.State}
+     */
+    @Transactional
+	@Override
+	public List<State> search(String key, Integer maxResult) {
+    	List<State> result = null;
+		if (cache != null && (result = cache.get(key)) != null) {
+			LOGGER.info("returning auto-complete state cache result for key {}", key);
+			return result.size() > maxResult ? result.subList(0, maxResult) : result;
+		}
+		List<MstState> states = stateDAO.getStates(key, maxResult);
+		result = states.stream().map(new Function<MstState, State>() {
+			@Override
+			public State apply(MstState mstState) {
+				State state = new State();
+				prepareModelFromDto(state, mstState);
+				return state;
+			}
+		}).collect(Collectors.toList());
+
+		if (cache != null) {
+			cache.put(key, result);
+		}
+		return result;
+	}
 
 	private void prepareModelFromDto(final State stateBean, final MstState stateDto) {
 		stateBean.setId(stateDto.getId());

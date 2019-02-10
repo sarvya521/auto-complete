@@ -120,6 +120,35 @@ public class CityAutoCompleteServiceImpl implements AutoCompleteService<City> {
 		return result;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return {@link java.util.List} list of {@link com.ac.model.City}
+     */
+    @Transactional
+	@Override
+	public List<City> search(String key, Integer maxResult) {
+    	List<City> result = null;
+		if (cache != null && (result = cache.get(key)) != null) {
+			LOGGER.info("returning auto-complete city cache result for key {}", key);
+			return result.size() > maxResult ? result.subList(0, maxResult) : result;
+		}
+		List<MstCity> cities = cityDAO.getCities(key, maxResult);
+		result = cities.stream().map(new Function<MstCity, City>() {
+			@Override
+			public City apply(MstCity mstCity) {
+				City city = new City();
+				prepareModelFromDto(city, mstCity);
+				return city;
+			}
+		}).collect(Collectors.toList());
+		
+		if (cache != null) {
+			cache.put(key, result);
+		}
+		return result;
+	}
+    
     private void prepareModelFromDto(final City cityBean, final MstCity cityDto) {
         cityBean.setId(cityDto.getId());
         cityBean.setName(cityDto.getName());
