@@ -2,6 +2,7 @@ package com.ac.repo.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -50,24 +51,43 @@ public class StateDAOImpl implements StateDAO {
 	@Override
 	public List<MstState> getStates(String keyword, int maxResult) {
 		List<MstState> result = new ArrayList<>();
-		getStates(keyword.toLowerCase() + "%", maxResult, result);
+        getStatesStartsWithKeyword(keyword, maxResult, result);
         if(result.size() < maxResult) {
-        	getStates("%" + keyword.toLowerCase() + "%", maxResult, result);
+            getStatesContainsKeyword(keyword, maxResult, result);
         }
         return result;
     }
-    
-    private void getStates(String keywordExpression, int maxResult, List<MstState> result) {
-    	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+    private void getStatesStartsWithKeyword(String keyword, int maxResult, List<MstState> result) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<MstState> cq = cb.createQuery(MstState.class);
 
         Root<MstState> state = cq.from(MstState.class);
 
-        Predicate namePredicate = cb.like(cb.lower(state.get("name")), keywordExpression);
+        Predicate namePredicate = cb.like(cb.lower(state.get("name")), keyword.toLowerCase() + "%");
         cq.where(namePredicate);
-        
+
         cq.orderBy(cb.asc(state.get("name")));
-        
+
+        TypedQuery<MstState> query = entityManager.createQuery(cq);
+        query.setFirstResult(0).setMaxResults(maxResult - result.size());
+        result.addAll(query.getResultList());
+    }
+
+    private void getStatesContainsKeyword(String keyword, int maxResult, List<MstState> result) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MstState> cq = cb.createQuery(MstState.class);
+
+        Root<MstState> state = cq.from(MstState.class);
+
+        List<String> stateNames = result.stream().map(c -> c.getName()).collect(Collectors.toList());
+
+        Predicate namePredicate = cb.and(cb.not(state.get("name").in(stateNames)),
+                cb.like(cb.lower(state.get("name")), "%" + keyword.toLowerCase() + "%"));
+        cq.where(namePredicate);
+
+        cq.orderBy(cb.asc(state.get("name")));
+
         TypedQuery<MstState> query = entityManager.createQuery(cq);
         query.setFirstResult(0).setMaxResults(maxResult - result.size());
         result.addAll(query.getResultList());

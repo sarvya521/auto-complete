@@ -1,6 +1,7 @@
 /bin/
 .project
 .settings/
+logs/
 auto-complete-api/.classpath
 auto-complete-api/.gitignore
 auto-complete-api/.project
@@ -36,6 +37,7 @@ auto-complete-util/.project
 auto-complete-util/.settings/
 parent/.project
 parent/.settings/
+.idea/
 .idea/compiler.xml
 .idea/encodings.xml
 .idea/misc.xml
@@ -52,3 +54,11 @@ auto-complete-svc/auto-complete-svc.iml
 auto-complete-util/auto-complete-util.iml
 auto-complete.iml
 parent/parent.iml
+auto-complete-api/target/
+auto-complete-constant/target/
+auto-complete-dto/target/
+auto-complete-exception/target/
+auto-complete-model/target/
+auto-complete-repo/target/
+auto-complete-svc/target/
+auto-complete-util/target/

@@ -2,6 +2,7 @@ package com.ac.repo.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -50,24 +51,43 @@ public class CityDAOImpl implements CityDAO {
     @Override
     public List<MstCity> getCities(String keyword, int maxResult) {
     	List<MstCity> result = new ArrayList<>();
-    	getCities(keyword.toLowerCase() + "%", maxResult, result);
+        getCitiesStartsWithKeyword(keyword, maxResult, result);
         if(result.size() < maxResult) {
-        	getCities("%" + keyword.toLowerCase() + "%", maxResult, result);
+            getCitiesContainsKeyword(keyword, maxResult, result);
         }
         return result;
     }
-    
-    private void getCities(String keywordExpression, int maxResult, List<MstCity> result) {
+
+    private void getCitiesStartsWithKeyword(String keyword, int maxResult, List<MstCity> result) {
     	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<MstCity> cq = cb.createQuery(MstCity.class);
 
         Root<MstCity> city = cq.from(MstCity.class);
 
-        Predicate namePredicate = cb.like(cb.lower(city.get("name")), keywordExpression);
+        Predicate namePredicate = cb.like(cb.lower(city.get("name")), keyword.toLowerCase() + "%");
         cq.where(namePredicate);
-        
+
         cq.orderBy(cb.asc(city.get("name")));
-        
+
+        TypedQuery<MstCity> query = entityManager.createQuery(cq);
+        query.setFirstResult(0).setMaxResults(maxResult - result.size());
+        result.addAll(query.getResultList());
+    }
+
+    private void getCitiesContainsKeyword(String keyword, int maxResult, List<MstCity> result) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MstCity> cq = cb.createQuery(MstCity.class);
+
+        Root<MstCity> city = cq.from(MstCity.class);
+
+        List<String> cityNames = result.stream().map(c -> c.getName()).collect(Collectors.toList());
+
+        Predicate namePredicate = cb.and(cb.not(city.get("name").in(cityNames)),
+                cb.like(cb.lower(city.get("name")), "%" + keyword.toLowerCase() + "%"));
+        cq.where(namePredicate);
+
+        cq.orderBy(cb.asc(city.get("name")));
+
         TypedQuery<MstCity> query = entityManager.createQuery(cq);
         query.setFirstResult(0).setMaxResults(maxResult - result.size());
         result.addAll(query.getResultList());

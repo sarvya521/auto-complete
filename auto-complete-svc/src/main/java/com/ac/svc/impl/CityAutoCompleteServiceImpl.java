@@ -142,7 +142,7 @@ public class CityAutoCompleteServiceImpl implements AutoCompleteService<City> {
 				return city;
 			}
 		}).collect(Collectors.toList());
-		
+
 		if (cache != null) {
 			cache.put(key, result);
 		}
